@@ -547,4 +547,42 @@ function maskL8sr(image) {
     region: AOI,
   }); 
   
-  
+  /////////////////////////**********************      2016 AREA CALCULATION       ***********************************************/////////////////
+
+var areaImage2016 = ee.Image.pixelArea().divide(1e4).addBands(classified2016);
+ 
+var areas2016 = areaImage2016.reduceRegion({
+      reducer: ee.Reducer.sum().group({
+      groupField: 1,
+      groupName: 'landcover',
+    }),
+    geometry: AOI,
+    scale: 100,
+    maxPixels: 1e12,
+    tileScale: 16
+    }); 
+ 
+print('2016 Landcover Areas in Hectares', areas2016);
+
+var areaChart2016 = ui.Chart.image.byClass({
+  image: areaImage2016,
+  classBand: 'classification', 
+  region: AOI,
+  scale: 100,
+  reducer: ee.Reducer.sum(),
+  classLabels: ['Water body', 'Grassland', 'Bareland','Bushland', 'Cropland','Settlement', 'Shrubland'],
+}).setOptions({
+  hAxis: {title: 'Classes'},
+  vAxis: {title: 'Area Ha'},
+  title: '2016 Area by class',
+  series: {
+    0: { color: '00FFFF' },
+    1: { color: 'F0E68C' },
+    2: { color: 'b4b4b4' },
+    3: { color: '006400' },
+    4: { color: 'f096ff' },
+    5: { color: 'A52A2A' },
+    6: { color: 'ffbb22' }
+  }
+});
+print('2016 AREA CHART', areaChart2016); 
