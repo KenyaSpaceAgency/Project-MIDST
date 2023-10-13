@@ -694,3 +694,87 @@ var legend = ui.Panel({
   // add legend to map (alternatively you can also print the legend to the console)
   Map.add(legend);
   
+  
+//***************************************************************************************************************
+//Define a GEE user interface panel on which to draw the legend
+var legend = ui.Panel({
+    style: {
+      position: 'bottom-left',
+      padding: '6px 15px'
+    }
+  });
+  
+  var legendTitle = ui.Label({
+    value: 'Legend',
+    style: {
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: '0 0 4px 0',
+      padding: '0'
+      }
+  });
+  
+  // Add the title to the legend
+  legend.add(legendTitle);
+  
+  //Define the color of each land cover class.
+  //The colors correspond to these classes respectively;
+               //Natural forest, Plantation, Bamboo, Cropland, Open Grass land, Wooded grassland
+  var palette =['006400','ffbb22','ffff4c','f096ff','fa0000','b4b4b4','f0f0f0','0064c8', '0096a0','00cf75', 'fae6a0' ];
+   
+  //Add the names of the classes
+  var names = ['Trees', 'Shrubland', 'Grassland','Cropland', 'Built-up','Barren / sparse vegetation', 'Snow and ice', 'Open water', 'Herbaceous wetland','Mangroves', 'Moss and lichen' ];
+  
+  //This function defines how each element of the key will appear
+   var makeRow = function(color, name){
+        // Create the label that is actually the colored box.
+        var colorBox = ui.Label({
+          style: {
+            backgroundColor: '#' + color,
+            // Use padding to give the box height and width.
+            padding: '8px',
+            margin: '0 0 4px 0'
+          }
+        });
+        // Create the label filled with the description text.
+        var description = ui.Label({
+          value: name,
+          style: {margin: '0 0 4px 6px'}
+        });
+        // return the panel
+        return ui.Panel({
+          widgets: [colorBox, description],
+          layout: ui.Panel.Layout.Flow('horizontal')
+        });
+  };
+  //Use the function to add each land cover class and its corresponding color to the legend
+  for (var i = 0; i < 11; i++) {
+    legend.add(makeRow(palette[i], names[i]));
+  }
+  // add legend to map (alternatively you can also print the legend to the console)
+  Map.add(legend);
+  
+  
+  
+  
+  /////////////**************
+  /**
+  map.centerObject(AOI, 12)
+  map2.centerObject(AOI, 12)
+  
+  
+  
+  var SWIPE = ui.SplitPanel({
+    firstPanel: map,
+    secondPanel: map2,
+    orientation: "horizontal",
+    wipe: true,
+    style:{stretch: "both"}
+  })
+  
+  ui.root.add(SWIPE)
+  
+  ui.Map.Linker([map, map2])
+  
+  ***/
+  
