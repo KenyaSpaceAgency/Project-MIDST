@@ -586,3 +586,111 @@ var areaChart2016 = ui.Chart.image.byClass({
   }
 });
 print('2016 AREA CHART', areaChart2016); 
+
+//////////// Let's work with SplitPanels modifying a bit the user interface!
+
+//ui.root.clear()
+
+///////// map before the flood
+
+//var map = ui.Map()
+
+// map.addLayer(composite2016, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2016 RGB Composite', false)
+
+// map.addLayer(Time2016_before, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2016 RGB BEFORE FLOODS', false)
+
+// map.addLayer(before2016_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2016 Pre-floods", false)
+
+// map.addLayer(before2020_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2020 Pre-floods", false)
+
+// //map.addLayer(before2021_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2021 Pre-floods", false)
+
+// map.addLayer(classified2015, {min: 0, max: 6, palette: ['00FFFF', 'F0E68C', 'b4b4b4', '006400', '808000', 'A52A2A', 'ffbb22']}, '2016 Classified Map');
+
+// var before_title = ui.Label({value: "BEFORE", style: {position: "bottom-center"}})
+
+// map.add(before_title)
+
+
+/////////// map after the flood
+
+// var map2 = ui.Map()
+
+// map2.addLayer(composite2020, {min:0, max:0.3, bands:['B4', 'B3', 'B2']}, '2020 RGB Composite', false)
+
+// map2.addLayer(Time2016_after, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2016 RGB AFTER FLOODS', false)
+
+// map2.addLayer(after2016_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2016 After Floods", false)
+
+// map2.addLayer(after2020_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2020 After Floods", false)
+
+//map2.addLayer(after2021_flood, {min:0, max:0.5, palette:['green', 'blue']}, "2021 Floods", false)
+
+// map2.addLayer(classified2020, {min: 0, max: 6, palette: ['00FFFF', 'F0E68C', 'b4b4b4', '006400', '808000', 'A52A2A', 'ffbb22']}, '2020 Classified Map');
+
+// var after_title = ui.Label({value: "AFTER", style:{position: "bottom-right"}})
+
+// map2.add(after_title)
+
+
+////***********************     LEGEND PANEL   *****************************/////////////////////////
+
+//Define a GEE user interface panel on which to draw the legend
+var legend = ui.Panel({
+    style: {
+      position: 'bottom-right',
+      padding: '6px 15px'
+    }
+  });
+  
+  var legendTitle = ui.Label({
+    value: 'Legend',
+    style: {
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: '0 0 4px 0',
+      padding: '0'
+      }
+  });
+  
+  
+  // Add the title to the legend
+  legend.add(legendTitle);
+  
+  //Define the color of each land cover class.
+  //The colors correspond to these classes respectively;
+               //Natural forest, Plantation, Bamboo, Cropland, Open Grass land, Wooded grassland
+  var palette =['00FFFF', 'F0E68C', 'b4b4b4', '006400', 'f096ff', 'A52A2A', 'ffbb22'];
+   
+  //Add the names of the classes
+  var names = ['Water body', 'Grassland', 'Bareland','Bushland', 'Cropland','Settlement', 'Shrubland'];
+  
+  //This function defines how each element of the key will appear
+   var makeRow = function(color, name){
+        // Create the label that is actually the colored box.
+        var colorBox = ui.Label({
+          style: {
+            backgroundColor: '#' + color,
+            // Use padding to give the box height and width.
+            padding: '8px',
+            margin: '0 0 4px 0'
+          }
+        });
+        // Create the label filled with the description text.
+        var description = ui.Label({
+          value: name,
+          style: {margin: '0 0 4px 6px'}
+        });
+        // return the panel
+        return ui.Panel({
+          widgets: [colorBox, description],
+          layout: ui.Panel.Layout.Flow('horizontal')
+        });
+  };
+  //Use the function to add each land cover class and its corresponding color to the legend
+  for (var i = 0; i < 7; i++) {
+    legend.add(makeRow(palette[i], names[i]));
+  }
+  // add legend to map (alternatively you can also print the legend to the console)
+  Map.add(legend);
+  
