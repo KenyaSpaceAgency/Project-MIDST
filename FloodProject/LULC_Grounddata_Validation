@@ -151,3 +151,34 @@ Export.image.toDrive({
   scale: 20,
   region: AOI,
 }); 
+
+/////////////////////////////////////////////////////////////////////////////////
+//____________________3)  ACCURACY ASSESSMENT SECTION_____________________________//
+//////////////////////////////////////////////////////////////////////////////////
+
+
+//Validation data is sampled from the classified image with regard
+//to the validation points.
+var validation = classified2020.sampleRegions({
+    //The validation features from which validation data is sampled
+    collection: Tana,
+    //property name in the validation features that contain the classification label
+    properties: ['landcover'],
+    scale: 10
+  });
+  //print('Validation', validation);
+  
+  // compare the landcover of your validation data against the classification results
+  
+  var testAccuracy = validation.errorMatrix('landcover', 'classification');
+  
+  //  print the error matrix to the console
+  
+  print('Confusion Matrix:', testAccuracy);
+  
+  
+  
+  //print overall accuracy and Kappa value to the console
+  
+  print('Overall Accuracy:',testAccuracy.accuracy().multiply(100));
+  
