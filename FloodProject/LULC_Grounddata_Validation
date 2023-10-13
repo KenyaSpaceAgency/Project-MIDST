@@ -20,3 +20,83 @@ function maskS2clouds(image) {
 
   return image.updateMask(mask).divide(10000);
 }
+
+//******************************      2021      ****************************************//////
+
+/////////// Time before floods 
+
+var Time2021_before = ic_s2.filterDate("2021-01-01", "2021-03-14")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 40)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+    
+/////////// Time after floods
+                        
+var Time2021_after = ic_s2.filterDate("2021-03-26", "2021-05-26")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 40)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+                        
+
+
+////////// Modified Normalized Difference Water Index (NDWI)
+
+var after2021_flood = Time2021_after.normalizedDifference(["B3", "B11"]).rename("MNDWI")
+var before2021_flood = Time2021_before.normalizedDifference(["B3", "B11"]).rename("MNDWI")
+
+
+
+//******************************      2020      ****************************************//////
+
+/////////// Time before floods 
+
+var Time2020_before = ic_s2.filterDate("2020-01-25", "2020-04-09")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 40)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+    
+/////////// Time after floods
+                        
+var Time2020_after = ic_s2.filterDate("2020-04-11", "2020-06-30")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 40)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+                        
+
+/////////// 2020 RGB COMPOSITE
+
+var filtered2020 = ic_s2.filterDate("2020-01-01", "2020-12-31")
+                  .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 40)
+                        .map(maskS2clouds)
+                        //.median()
+                        //.clip(AOI);
+
+
+var composite2020 = filtered2020.median().clip(AOI)
+
+var addIndices = function(image) {
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename(['ndvi']);
+  var ndbi = image.normalizedDifference(['B11', 'B8']).rename(['ndbi']);
+  var mndwi = image.normalizedDifference(['B3', 'B11']).rename(['mndwi']); 
+  var bsi = image.expression(
+      '(( X + Y ) - (A + B)) /(( X + Y ) + (A + B)) ', {
+        'X': image.select('B11'), //swir1
+        'Y': image.select('B4'),  //red
+        'A': image.select('B8'), // nir
+        'B': image.select('B2'), // blue
+  }).rename('bsi');
+  return image.addBands(ndvi).addBands(ndbi).addBands(mndwi).addBands(bsi)
+}
+
+var composite2020 = addIndices(composite2020);
+
+
+var elev = alos.select('AVE_DSM').divide(2000).rename('elev');
+var slope = ee.Terrain.slope(alos.select('AVE_DSM')).divide(30).rename('slope');
+
+var composite2020 = composite2020.addBands(elev).addBands(slope);
+
