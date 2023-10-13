@@ -182,3 +182,46 @@ var validation = classified2020.sampleRegions({
   
   print('Overall Accuracy:',testAccuracy.accuracy().multiply(100));
   
+///*******************    ESA LAND COVER MAP 2020 *******************//////////////////////
+
+var dataset = ee.ImageCollection("ESA/WorldCover/v100").first();
+
+var visualization = {
+  bands: ['Map'],
+};
+
+Map.addLayer(dataset.clip(AOI), visualization, "2020 ESA LAND COVER", false);
+
+//-------------------------------- Urban area ------------------------------//
+
+// Using the same Sentinel Land Cover Product 
+// Filter urban areas
+var urbanmask = dataset.eq(50)
+var urban = dataset
+  .updateMask(urbanmask)
+/**
+//Calculate affected urban areas using the resampled flood layer
+var urban_affected = urban
+  .mask(flooded_res)
+  .updateMask(urban);
+**/
+// get pixel area of affected urban layer
+var urban_pixelarea = urban
+  .multiply(ee.Image.pixelArea()); //calcuate the area of each pixel 
+
+// sum pixels of affected cropland layer
+var urban_stats = urban_pixelarea.reduceRegion({
+  reducer: ee.Reducer.sum(), //sum all pixels with area information                
+  geometry: AOI,
+  scale: 20,
+  bestEffort: true,
+  });
+
+// convert area to hectares
+var urban_area_ha = urban_stats
+  .getNumber('Map')
+  .divide(10000)
+  .round();
+
+print("Urban Areas in Hectares", urban_area_ha )
+
