@@ -225,3 +225,173 @@ var urban_area_ha = urban_stats
 
 print("Urban Areas in Hectares", urban_area_ha )
 
+/////////////////////////**********************      2020 AREA CALCULATION       ***********************************************/////////////////
+
+var areaImage = ee.Image.pixelArea().divide(1e4).addBands(classified2020);
+ 
+var areas2020 = areaImage.reduceRegion({
+      reducer: ee.Reducer.sum().group({
+      groupField: 1,
+      groupName: 'landcover',
+    }),
+    geometry: AOI,
+    scale: 100,
+    maxPixels: 1e12,
+    tileScale: 16
+    }); 
+ 
+print('2020 Landcover Areas in Hectares', areas2020);
+
+var areaChart = ui.Chart.image.byClass({
+  image: areaImage,
+  classBand: 'classification', 
+  region: AOI,
+  scale: 100,
+  reducer: ee.Reducer.sum(),
+  classLabels: ['Water body', 'Grassland', 'Bareland','Bushland', 'Cropland','Settlement', 'Shrubland'],
+}).setOptions({
+  hAxis: {title: 'Classes'},
+  vAxis: {title: 'Area Ha'},
+  title: '2020 Area by class',
+  series: {
+    0: { color: '00FFFF' },
+    1: { color: 'F0E68C' },
+    2: { color: 'b4b4b4' },
+    3: { color: '006400' },
+    4: { color: 'f096ff' },
+    5: { color: 'A52A2A' },
+    6: { color: 'ffbb22' }
+  }
+});
+print('2020 AREA CHART',areaChart); 
+
+
+//******************************      Sentinel 2018      ****************************************//////
+
+/////////// Time before floods 
+/**
+var Time2018_before = ic_s2.filterDate("2018-01-25", "2018-04-09")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 80)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+    
+/////////// Time after floods
+                        
+var Time2018_after = ic_s2.filterDate("2018-04-11", "2018-06-30")
+                        .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 80)
+                        .map(maskS2clouds)
+                        .median()
+                        .clip(AOI)
+                        
+
+/////////// 2018 RGB COMPOSITE
+
+var filtered2018 = ic_s2.filterDate("2018-01-01", "2018-12-31")
+                  .filterMetadata("CLOUDY_PIXEL_PERCENTAGE", "less_than", 80)
+                        .map(maskS2clouds)
+                        //.median()
+                        //.clip(AOI);
+
+
+var composite2018 = filtered2018.median().clip(AOI)
+
+// var addIndices = function(image) {
+//   var ndvi = image.normalizedDifference(['B8', 'B4']).rename(['ndvi']);
+//   var ndbi = image.normalizedDifference(['B11', 'B8']).rename(['ndbi']);
+//   var mndwi = image.normalizedDifference(['B3', 'B11']).rename(['mndwi']); 
+//   var bsi = image.expression(
+//       '(( X + Y ) - (A + B)) /(( X + Y ) + (A + B)) ', {
+//         'X': image.select('B11'), //swir1
+//         'Y': image.select('B4'),  //red
+//         'A': image.select('B8'), // nir
+//         'B': image.select('B2'), // blue
+//   }).rename('bsi');
+//   return image.addBands(ndvi).addBands(ndbi).addBands(mndwi).addBands(bsi)
+// }
+
+var composite2018 = addIndices(composite2018);
+
+
+var elev = alos.select('AVE_DSM').divide(2000).rename('elev');
+var slope = ee.Terrain.slope(alos.select('AVE_DSM')).divide(30).rename('slope');
+
+var composite2018 = composite2018.addBands(elev).addBands(slope);
+**/
+
+
+//////////*********** Modified Normalized Difference Water Index (NDWI)    ********///////////////
+/**
+var after2018_flood = Time2018_after.normalizedDifference(["B3", "B11"]).rename("MNDWI")
+var before2018_flood = Time2018_before.normalizedDifference(["B3", "B11"]).rename("MNDWI")
+
+Map.addLayer(composite2018, {min:0, max:0.3, bands:['B4', 'B3', 'B2']}, '2018 RGB Composite', false)
+**/
+
+
+//***********************************     Landsat 2018      ****************************************//////
+
+/**
+ * Function to mask clouds based on the pixel_qa band of Landsat 8 SR data.
+ * @param {ee.Image} image Input Landsat 8 SR image
+ * @return {ee.Image} Cloudmasked Landsat 8 image
+ */
+function maskL8sr(image) {
+  // Bits 3 and 5 are cloud shadow and cloud, respectively.
+  var cloudShadowBitMask = (1 << 4);
+  var cloudsBitMask = (1 << 3);
+  // Get the pixel QA band.
+  var qa = image.select('QA_PIXEL');
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)
+                 .and(qa.bitwiseAnd(cloudsBitMask).eq(0));
+  return image.updateMask(mask);
+}
+
+// Applies scaling factors.
+function applyScaleFactors(image) {
+  var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);
+  var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);
+  return image.addBands(opticalBands, null, true)
+              .addBands(thermalBands, null, true);
+}
+
+
+/////////// Time before floods
+
+var Time2018_before = ic_l8.filterDate("2018-01-01", "2018-08-28")
+                  .filterMetadata("CLOUD_COVER", "less_than", 40)
+                  .map(maskL8sr)
+                  .map(applyScaleFactors)
+                  .median()
+                  .clip(AOI);
+
+
+/////////// Time after floods
+
+var Time2018_after = ic_l8.filterDate("2018-09-02", "2018-12-30")
+                  .filterMetadata("CLOUD_COVER", "less_than", 40)
+                  .map(maskL8sr)
+                  .map(applyScaleFactors)
+                  .median()
+                  .clip(AOI);
+
+
+/////////// 2018 RGB COMPOSITE
+
+var composite2018 = ic_l8.filterDate("2018-01-01", "2018-12-31")
+                  //.filterMetadata("CLOUD_COVER", "less_than", 50)
+                  .map(maskL8sr)
+                  .map(applyScaleFactors)
+                  .median()
+                  .clip(AOI);
+
+
+////////// Modified Normalized Difference Water Index (MNDWI)
+
+var after2018_flood = Time2018_after.normalizedDifference(["SR_B3", "SR_B6"]).rename("MNDWI")
+var before2018_flood = Time2018_before.normalizedDifference(["SR_B3", "SR_B6"]).rename("MNDWI")
+
+
+Map.addLayer(composite2018, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2018 RGB Composite')
+
