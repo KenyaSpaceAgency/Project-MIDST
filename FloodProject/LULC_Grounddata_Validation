@@ -395,3 +395,156 @@ var before2018_flood = Time2018_before.normalizedDifference(["SR_B3", "SR_B6"]).
 
 Map.addLayer(composite2018, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2018 RGB Composite')
 
+///////////***************************     2018 CLASSIFICATION    *********************************************//////////////
+/**
+var bands = ["SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6"]
+
+var gcps2018 = Water2018.merge(Grassland2018).merge(Bareland2018).merge(Bushland2018).merge(Cropland2018).merge(Settlement2018).merge(Shrubs2018)
+
+// Add a random column and split the GCPs into training and validation set
+var TGCP2018 = gcps2018.randomColumn()
+
+// This being a simpler classification, we take 70% points
+// for validation. Normal recommended ratio is
+// 70% training, 30% validation
+var trainingGcp2018 = TGCP2018.filter(ee.Filter.lt('random', 0.7));
+var validationGcp2018 = TGCP2018.filter(ee.Filter.gte('random', 0.7));
+
+
+
+// Overlay the point on the image to get training data.
+var training2018 = composite2018.sampleRegions({
+  collection: trainingGcp2018, 
+  properties: ['landcover'], 
+  scale: 30,
+  tileScale: 16
+});
+
+// Train a classifier.
+var classifier2018 = ee.Classifier.smileRandomForest(10).train({
+  features: training2018,  
+  classProperty: 'landcover', 
+  inputProperties: bands
+});
+//********* Classify the image.
+var classified2018 = composite2018.classify(classifier2018);
+
+Map.addLayer(classified2018, {min: 0, max: 6, palette: ['00FFFF', 'F0E68C', 'b4b4b4', '006400', 'f096ff', 'A52A2A', 'ffbb22']}, '2015-2016 Classified Map');
+**/
+
+
+
+
+
+//***********************************     Landsat 2016      ****************************************//////
+
+/**
+ * Function to mask clouds based on the pixel_qa band of Landsat 8 SR data.
+ * @param {ee.Image} image Input Landsat 8 SR image
+ * @return {ee.Image} Cloudmasked Landsat 8 image
+ */
+function maskL8sr(image) {
+    // Bits 3 and 5 are cloud shadow and cloud, respectively.
+    var cloudShadowBitMask = (1 << 4);
+    var cloudsBitMask = (1 << 3);
+    // Get the pixel QA band.
+    var qa = image.select('QA_PIXEL');
+    // Both flags should be set to zero, indicating clear conditions.
+    var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)
+                   .and(qa.bitwiseAnd(cloudsBitMask).eq(0));
+    return image.updateMask(mask);
+  }
+  
+  
+  // Applies scaling factors.
+  function applyScaleFactors(image) {
+    var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);
+    var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);
+    return image.addBands(opticalBands, null, true)
+                .addBands(thermalBands, null, true);
+  }
+  
+  /////////// Time before floods
+  
+  var Time2016_before = ic_l8.filterDate("2016-01-01", "2016-08-28")
+                    .filterMetadata("CLOUD_COVER", "less_than", 40)
+                    .map(maskL8sr)
+                    .map(applyScaleFactors)
+                    .median()
+                    .clip(AOI);
+  
+  
+  /////////// Time after floods
+  
+  var Time2016_after = ic_l8.filterDate("2016-09-02", "2016-12-30")
+                    .filterMetadata("CLOUD_COVER", "less_than", 100)
+                    .map(maskL8sr)
+                    .map(applyScaleFactors)
+                    .median()
+                    .clip(AOI);
+  
+  
+  /////////// 2015 RGB COMPOSITE
+  
+  var composite2016 = ic_l8.filterDate("2016-01-01", "2016-12-31")
+                    .filterMetadata("CLOUD_COVER", "less_than", 50)
+                    .map(maskL8sr)
+                    .map(applyScaleFactors)
+                    .median()
+                    .clip(AOI);
+  
+  
+  ////////// Modified Normalized Difference Water Index (MNDWI)
+  
+  var after2016_flood = Time2016_after.normalizedDifference(["SR_B3", "SR_B6"]).rename("MNDWI")
+  var before2016_flood = Time2016_before.normalizedDifference(["SR_B3", "SR_B6"]).rename("MNDWI")
+  
+  
+  Map.addLayer(composite2016, {min:0, max:0.3, bands:['SR_B4', 'SR_B3', 'SR_B2']}, '2016 RGB Composite', false)
+  
+  ///////////**********************     2016 CLASSIFICATION    *****************//////////////
+  
+  var bands = ["SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6"]
+  
+  var gcps2016 = Water2016.merge(Grassland2016).merge(Bareland2016).merge(Bushland2016).merge(Cropland2016).merge(Settlement2016).merge(Shrubs2016)
+  
+  // Add a random column and split the GCPs into training and validation set
+  var TGCP2016 = gcps2016.randomColumn()
+  
+  // This being a simpler classification, we take 70% points
+  // for validation. Normal recommended ratio is
+  // 70% training, 30% validation
+  var trainingGcp2016 = TGCP2016.filter(ee.Filter.lt('random', 0.7));
+  var validationGcp2016 = TGCP2016.filter(ee.Filter.gte('random', 0.7));
+  
+  
+  
+  // Overlay the point on the image to get training data.
+  var training2016 = composite2016.sampleRegions({
+    collection: trainingGcp2016, 
+    properties: ['landcover'], 
+    scale: 30,
+    tileScale: 16
+  });
+  
+  
+  // Train a classifier.
+  var classifier2016 = ee.Classifier.smileRandomForest(10).train({
+    features: training2016,  
+    classProperty: 'landcover', 
+    inputProperties: bands
+  });
+  //********* Classify the image.
+  var classified2016 = composite2016.classify(classifier2016);
+  
+  Map.addLayer(classified2016, {min: 0, max: 6, palette: ['00FFFF', 'F0E68C', 'b4b4b4', '006400', 'f096ff', 'A52A2A', 'ffbb22']}, '2016 Classified Map', false);
+  
+  
+  Export.image.toDrive({
+    image: classified2016,
+    description:'TANA_RIVER_BASIN_CLASSIFIED_2016',
+    scale: 30,
+    region: AOI,
+  }); 
+  
+  
