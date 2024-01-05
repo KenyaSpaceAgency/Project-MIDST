@@ -120,3 +120,57 @@ var after = after_collection.mosaic().clip(aoi);
 var smoothing_radius = 50;
 var before_filtered = before.focal_mean(smoothing_radius, 'circle', 'meters');
 var after_filtered = after.focal_mean(smoothing_radius, 'circle', 'meters');
+
+//------------------------------- FLOOD EXTENT CALCULATION -------------------------------//
+
+// Calculate the difference between the before and after images
+var difference = after_filtered.divide(before_filtered);
+
+// Apply the predefined difference-threshold and create the flood extent mask 
+var threshold = difference_threshold;
+var difference_binary = difference.gt(threshold);
+
+// Refine flood result using additional datasets
+      
+      // Include JRC layer on surface water seasonality to mask flood pixels from areas
+      // of "permanent" water (where there is water > 10 months of the year)
+      var swater = ee.Image('JRC/GSW1_0/GlobalSurfaceWater').select('seasonality');
+      var swater_mask = swater.gte(10).updateMask(swater.gte(10));
+      
+      //Flooded layer where perennial water bodies (water > 10 mo/yr) is assigned a 0 value
+      var flooded_mask = difference_binary.where(swater_mask,0);
+      // final flooded area without pixels in perennial waterbodies
+      var flooded = flooded_mask.updateMask(flooded_mask);
+      
+      // Compute connectivity of pixels to eliminate those connected to 8 or fewer neighbours
+      // This operation reduces noise of the flood extent product 
+      var connections = flooded.connectedPixelCount();    
+      var flooded = flooded.updateMask(connections.gte(8));
+      
+      // Mask out areas with more than 5 percent slope using a Digital Elevation Model 
+      var DEM = ee.Image('WWF/HydroSHEDS/03VFDEM');
+      var terrain = ee.Algorithms.Terrain(DEM);
+      var slope = terrain.select('slope');
+      var flooded = flooded.updateMask(slope.lt(5));
+
+// Calculate flood extent area
+// Create a raster layer containing the area information of each pixel 
+var flood_pixelarea = flooded.select(polarization)
+  .multiply(ee.Image.pixelArea());
+
+// Sum the areas of flooded pixels
+// default is set to 'bestEffort: true' in order to reduce compuation time, for a more 
+// accurate result set bestEffort to false and increase 'maxPixels'. 
+var flood_stats = flood_pixelarea.reduceRegion({
+  reducer: ee.Reducer.sum(),              
+  geometry: aoi,
+  scale: 10, // native resolution 
+  //maxPixels: 1e9,
+  bestEffort: true
+  });
+
+// Convert the flood extent to hectares (area calculations are originally given in meters)  
+var flood_area_ha = flood_stats
+  .getNumber(polarization)
+  .divide(10000)
+  .round(); 
