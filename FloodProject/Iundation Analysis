@@ -174,3 +174,118 @@ var flood_area_ha = flood_stats
   .getNumber(polarization)
   .divide(10000)
   .round(); 
+
+//------------------------------  DAMAGE ASSSESSMENT  ----------------------------------//
+
+//----------------------------- Exposed population density ----------------------------//
+
+// Load JRC Global Human Settlement Popluation Density layer
+// Resolution: 250. Number of people per cell is given.
+var population_count = ee.Image('JRC/GHSL/P2016/POP_GPW_GLOBE_V1/2015').clip(aoi);
+
+// Calculate the amount of exposed population
+// get GHSL projection
+var GHSLprojection = population_count.projection();
+
+// Reproject flood layer to GHSL scale
+var flooded_res1 = flooded
+    .reproject({
+    crs: GHSLprojection
+  });
+
+// Create a raster showing exposed population only using the resampled flood layer
+var population_exposed = population_count
+  .updateMask(flooded_res1)
+  .updateMask(population_count);
+
+//Sum pixel values of exposed population raster 
+var stats = population_exposed.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: aoi,
+  scale: 250,
+  maxPixels:1e9 
+});
+
+// get number of exposed people as integer
+var number_pp_exposed = stats.getNumber('population_count').round();
+
+//----------------------------- Affected agricultural land ----------------------------//
+
+// using MODIS Land Cover Type Yearly Global 500m
+// filter image collection by the most up-to-date MODIS Land Cover product 
+var LC = ee.ImageCollection('MODIS/006/MCD12Q1')
+  .filterDate('2014-01-01',after_end)
+  .sort('system:index',false)
+  .select("LC_Type1")
+  .first()
+  .clip(aoi);
+
+// Extract only cropland pixels using the classes cropland (>60%) and Cropland/Natural 
+// Vegetation Mosaics: mosaics of small-scale cultivation 40-60% incl. natural vegetation
+var cropmask = LC
+  .eq(12)
+  .or(LC.eq(14))
+var cropland = LC
+  .updateMask(cropmask)
+  
+// get MODIS projection
+var MODISprojection = LC.projection();
+
+// Reproject flood layer to MODIS scale
+var flooded_res = flooded
+    .reproject({
+    crs: MODISprojection
+  });
+
+// Calculate affected cropland using the resampled flood layer
+var cropland_affected = flooded_res
+  .updateMask(cropland)
+
+// get pixel area of affected cropland layer
+var crop_pixelarea = cropland_affected
+  .multiply(ee.Image.pixelArea()); //calcuate the area of each pixel 
+
+// sum pixels of affected cropland layer
+var crop_stats = crop_pixelarea.reduceRegion({
+  reducer: ee.Reducer.sum(), //sum all pixels with area information                
+  geometry: aoi,
+  scale: 500,
+  maxPixels: 1e9
+  });
+  
+// convert area to hectares
+var crop_area_ha = crop_stats
+  .getNumber(polarization)
+  .divide(10000)
+  .round();
+
+//-------------------------------- Affected urban area ------------------------------//
+
+// Using the same MODIS Land Cover Product 
+// Filter urban areas
+var urbanmask = LC.eq(13)
+var urban = LC
+  .updateMask(urbanmask)
+
+//Calculate affected urban areas using the resampled flood layer
+var urban_affected = urban
+  .mask(flooded_res)
+  .updateMask(urban);
+
+// get pixel area of affected urban layer
+var urban_pixelarea = urban_affected
+  .multiply(ee.Image.pixelArea()); //calcuate the area of each pixel 
+
+// sum pixels of affected cropland layer
+var urban_stats = urban_pixelarea.reduceRegion({
+  reducer: ee.Reducer.sum(), //sum all pixels with area information                
+  geometry: aoi,
+  scale: 500,
+  bestEffort: true,
+  });
+
+// convert area to hectares
+var urban_area_ha = urban_stats
+  .getNumber('LC_Type1')
+  .divide(10000)
+  .round();
