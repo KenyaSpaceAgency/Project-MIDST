@@ -21,4 +21,11 @@
 
 /* Now hit Run to start the demo! 
    Do not forget to delete/outcomment this geometry before creating a new one!
-  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+//imports
+var imageVisParam = {"opacity":1,"bands":["population_count"],"max":200,"palette":["ffff00","ffa500","ff0000"]},
+    imageVisParam2 = {"opacity":1,"bands":["population_count"],"max":200,"palette":["ffff00","ffa500","ff0000"]},
+    imageVisParam4 = {"opacity":1,"bands":["VH"],"palette":["0000ff"]},
+    imageVisParam5 = {"opacity":1,"bands":["VH"],"palette":["0000ff"]},
+    geometry = ee.FeatureCollection("projects/esther-mainaesther77/assets/Lower_Tana_AOI");
