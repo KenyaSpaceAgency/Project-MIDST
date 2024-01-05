@@ -29,3 +29,16 @@ var imageVisParam = {"opacity":1,"bands":["population_count"],"max":200,"palette
     imageVisParam4 = {"opacity":1,"bands":["VH"],"palette":["0000ff"]},
     imageVisParam5 = {"opacity":1,"bands":["VH"],"palette":["0000ff"]},
     geometry = ee.FeatureCollection("projects/esther-mainaesther77/assets/Lower_Tana_AOI");
+*******************************************************************************************
+                                       SET TIME FRAME
+
+   Set start and end dates of a period BEFORE the flood. Make sure it is long enough for 
+   Sentinel-1 to acquire an image (repitition rate = 6 days). Adjust these parameters, if
+   your ImageCollections (see Console) do not contain any elements.*/
+
+var before_start= '2020-05-01';
+var before_end='2020-05-20';
+
+// Now set the same parameters for AFTER the flood.
+var after_start='2020-05-20';
+var after_end='2021-06-10';
