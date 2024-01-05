@@ -42,3 +42,30 @@ var before_end='2020-05-20';
 // Now set the same parameters for AFTER the flood.
 var after_start='2020-05-20';
 var after_end='2021-06-10';
+
+/********************************************************************************************
+                           SET SAR PARAMETERS (can be left default)*/
+
+var polarization = "VH"; /*or 'VV' --> VH mostly is the prefered polarization for flood mapping.
+                           However, it always depends on your study area, you can select 'VV' 
+                           as well.*/ 
+var pass_direction = "DESCENDING"; /* or 'ASCENDING'when images are being compared use only one 
+                           pass direction. Consider changing this parameter, if your image 
+                           collection is empty. In some areas more Ascending images exist than 
+                           than descending or the other way around.*/
+var difference_threshold = 1.25; /*threshodl to be applied on the difference image (after flood
+                           - before flood). It has been chosen by trial and error. In case your
+                           flood extent result shows many false-positive or negative signals, 
+                           consider changing it! */
+//var relative_orbit = 79; 
+                          /*if you know the relative orbit for your study area, you can filter
+                           you image collection by it here, to avoid errors caused by comparing
+                           different relative orbits.*/
+
+
+/********************************************************************************************
+  ---->>> DO NOT EDIT THE SCRIPT PAST THIS POINT! (unless you know what you are doing) <<<---
+  ------------------>>> now hit the'RUN' at the top of the script! <<<-----------------------
+  -----> The final flood product will be ready for download on the right (under tasks) <-----
+
+  ******************************************************************************************/
