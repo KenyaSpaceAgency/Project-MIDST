@@ -1,0 +1,85 @@
+// import region
+//Load the CHIRPS data 
+Map.addLayer (Lowertana, {}, 'AOI');  
+//Filter the data range and create a chart for the year 2016
+var precip1=CHIRPS.filterDate('2016-01-01', '2016-12-31');
+var TS1 = ui.Chart.image.series(precip1, Lowertana,  ee.Reducer.mean(),1000, 'system:time_start').setOptions({
+         title: 'Precipitation 2016 Time Series',
+         vAxis: {title: 'mm/pentad'},
+});
+print(TS1);
+//Filter the data range and create a chart for the year 2018
+var precip2=CHIRPS.filterDate('2018-01-01', '2018-12-31');
+var TS2 = ui.Chart.image.series(precip2, Lowertana,  ee.Reducer.mean(),1000, 'system:time_start').setOptions({
+         title: 'Precipitation 2018 Time Series',
+         vAxis: {title: 'mm/pentad'},
+});
+print(TS2);
+//Filter the data range and create a chart for the year 2020
+var precip3=CHIRPS.filterDate('2020-01-01', '2020-12-31');
+var TS3 = ui.Chart.image.series(precip3, Lowertana,  ee.Reducer.mean(),1000, 'system:time_start').setOptions({
+         title: 'Precipitation 2020 Time Series',
+         vAxis: {title: 'mm/pentad'},
+});
+print(TS3);
+//Filter the data range and create a time series precipitation chart for 2016-2020 
+var precip = CHIRPS.filterDate('2016-01-01', '2020-12-31');
+var TS5 = ui.Chart.image.series(precip, Lowertana,
+         ee.Reducer.mean(),1000, 'system:time_start').setOptions({
+         title: 'Precipitation 2016-2020 Time Series',
+         vAxis: {title: 'mm/pentad'},
+});
+print(TS5);
+//Map out results
+var LowertanaPrecip1 = precip1.mean().clip(Lowertana);
+var LowertanaPrecip2 = precip2.mean().clip(Lowertana);
+var LowertanaPrecip3 = precip3.mean().clip(Lowertana);
+var LowertanaPrecip=precip.mean().clip(Lowertana);
+//Map.addLayer(eeObject, visParams, name, shown, opacity)
+Map.addLayer(LowertanaPrecip1, {'min': 0, 'max': 70,
+   'palette':['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000'],},
+   'Precip 2016', true);
+Map.addLayer(LowertanaPrecip2, {'min': 0, 'max': 70,
+   'palette':['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000'],},
+   'Precip 2018', true);
+Map.addLayer(LowertanaPrecip3, {'min': 0, 'max': 70,
+   'palette':['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000'],},
+   'Precip 2020', true);
+Map.addLayer(LowertanaPrecip, {'min': 0, 'max': 70,
+   'palette':['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000'],},
+   'Precip 2016-2020', true);
+Map.setCenter(39.039, -1.622, 7);
+// Export the images, to drive.
+//Export.image.toDrive(image, description, folder, fileNamePrefix,
+//dimensions, region, scale, crs, crsTransform, maxPixels, shardSize,
+//fileDimensions, skipEmptyTiles, fileFormat, format options)
+Export.image.toDrive({
+ image: LowertanaPrecip1,
+ description: 'Precipitation_2016',
+ folder:'earthengine',
+ region: Lowertana
+});
+Export.image.toDrive({
+ image: LowertanaPrecip2,
+ description: 'Precipitation_2018',
+ folder:'earthengine',
+ region: Lowertana
+});
+Export.image.toDrive({
+ image: LowertanaPrecip3,
+ description: 'Precipitation_2020',
+ folder:'earthengine',
+ region: Lowertana
+});
+Export.image.toDrive({
+ image: LowertanaPrecip,
+ description: 'Precipitation_2016-2020',
+ folder:'earthengine',
+ region: Lowertana
+});
+Export.image.toDrive({
+ image: LowertanaPrecip,
+ description: 'Precipitation_2016-2020',
+ folder:'earthengine',
+ region: Lowertana
+});
