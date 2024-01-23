@@ -17,7 +17,9 @@ Disaster management cuts across various fields involving monitoring and controll
 
 ### IMPLEMENTATION OF PROJECT MIDST
 
-Through the use of geospatial technologies, project MIDST explores the concept of monitoring the Earth’s surface (land cover and land use) and the changes that occur over time. Project MIDST was initiated in July 2020 by the Kenya Space Agency with the vision to primarily leverage on free and open-source data, platforms and systems to enable decision makers to make informed decisions grounded on data. Again, the initiation of this project has assisted and will continue supporting the counties and the country to monitor and report progress being made in the realization of SDG goals and targets, more particularly the ones listed below;
+Through the use of geospatial technologies, project MIDST explores the concept of monitoring the Earth’s surface (land cover and land use) and the changes that occur over time. Project MIDST was initiated in July 2020 by the Kenya Space Agency with the vision to primarily leverage on free and open-source data, platforms and systems to enable decision makers to make informed decisions grounded on data.
+
+The initiation of this project has assisted and will continue supporting the counties and the country to monitor and report progress being made in the realization of SDG goals and targets, more particularly the ones listed below;
 
 Zero hunger (SDG 2)
 Clean water and sanitation(SDG 6)
