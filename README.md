@@ -1,7 +1,7 @@
 # PROJECT MIDST (KENYA SPACE AGENCY)
 
 Project MIDST (Monitoring for Information and Decisions using Space Technology) is an initiative by Kenya Space Agency that seeks to support the National and County Government institutions to address the gaps and challenges highlighted in the assessment report on hardware, software, human resource and spatial data. The aim of the project is to use new and advancing geospatial technologies to co-develop various Earth Observation products and applications, with stakeholders, that could be used by the stakeholders to achieve certain goals within their mandate.
-Through project MIDST, the Agency is exploring the possibilities of developing systems and applications to enhance the uptake and utilization of space derived data and information for decision making. The project focuses on developing products on the following areas of application; Natural Resource Management (Forests), Spatial Planning (Urbanization), Disaster Management (Floods/Landslides).
+Through project MIDST, the Agency is exploring the possibilities of developing systems and applications to enhance the uptake and utilization of space derived data and information for decision making. The project focuses on developing products on the following areas of application; Natural Resource Management (Forests), Spatial Planning (Urbanization), Disaster Management (Floods and Landslides).
 
 ## PROJECT MIDST FOCUS AREAS
 
