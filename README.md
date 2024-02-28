@@ -13,6 +13,11 @@ Our natural resources play an important role in developing the country’s socio
   src="http://https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg"
   alt="Alt text"
   style="display: inline-block; margin: 0 auto; max-width: 80%"/>
+  
+  <img
+  src="http://https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
 ![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg)
 2. Urbanization & Spatial planning
