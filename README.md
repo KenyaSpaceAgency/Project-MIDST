@@ -9,7 +9,11 @@ Through project MIDST, the Agency is exploring the possibilities of developing s
 
 Our natural resources play an important role in developing the country’s socio-economic values. Management of natural resources involves monitoring and conserving naturally occurring resources within the country such as forest, marine ecosystems, mineral regions and biodiversity. Take for example forest cover across the country, which are essential in the production of goods, protection of soil, water and other environmental services, conservation of biodiversity, provision of socio-cultural services, livelihood support and a stabilizing force for the climate, require sustainable management which will enhance a positive impact in the development of the country’s socio-economic status.
 
-![alt text](http://https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg)
+<img
+  src="http://https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
+
 ![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg)
 2. Urbanization & Spatial planning
 
