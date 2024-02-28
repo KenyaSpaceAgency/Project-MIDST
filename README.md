@@ -35,7 +35,7 @@ The initiation of this project has assisted and will continue supporting the cou
         Life Under Water ( SDG 14)
         Life on Land (SDG 15)
 
-### KSA partnership with GEE
+### KSA partnership with GOOGLE EARTH ENGINE
 
 Google Earth Engine (GEE) is a platform used for scientific analysis and visualization of geospatial datasets. The platform provides easy, web-based access to an extensive catalog of satellite imagery and other geospatial data in an analysis-ready format. The data catalog is paired with scalable compute power backed by Google data centers and flexible APIs that let you seamlessly implement your existing geospatial workflows. This enables cutting-edge, global scale analysis and visualization.
 
