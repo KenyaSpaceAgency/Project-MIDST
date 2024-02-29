@@ -10,23 +10,31 @@ Through project MIDST, the Agency is exploring the possibilities of developing s
 Our natural resources play an important role in developing the country’s socio-economic values. Management of natural resources involves monitoring and conserving naturally occurring resources within the country such as forest, marine ecosystems, mineral regions and biodiversity. Take for example forest cover across the country, which are essential in the production of goods, protection of soil, water and other environmental services, conservation of biodiversity, provision of socio-cultural services, livelihood support and a stabilizing force for the climate, require sustainable management which will enhance a positive impact in the development of the country’s socio-economic status.
 
 <img
-src="https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg"
+src="https://midst.ksa.go.ke/admin/images/13/?next=/admin/images/"
   alt="Alt text"
   style="display: inline-block; margin: 0 auto; max-width: 80%"/>
-  <img
+<img
   src="https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg"
   alt="Alt text"
   style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
-![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst1.jpg)
 2. Urbanization & Spatial planning
 
 The country’s urban areas are on a rapid growth. High rate of urbanization if not planned well leads to uncontrolled sprouting of informal settlements with poor social, economic and environmental conditions. Project MIDST shall incorporate space data and geospatial technologies to build an application that will inform the relevant stakeholders on how to conduct proper spatial planning of our urban areas.
-![alt text](https://www.archdaily.com/968716/the-urban-remnants-of-colonial-planning-in-africa-dar-es-salaam-and-nairobi/614c3e58f91c8184a700009e-the-urban-remnants-of-colonial-planning-in-africa-dar-es-salaam-and-nairobi-photo)
+
+<img
+  src="https://www.archdaily.com/968716/the-urban-remnants-of-colonial-planning-in-africa-dar-es-salaam-and-nairobi/614c3e58f91c8184a700009e-the-urban-remnants-of-colonial-planning-in-africa-dar-es-salaam-and-nairobi-photo.jpg"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
+
 3. Disaster and Risk Management
 
 Disaster management cuts across various fields involving monitoring and controlling damages that may occur due to floods, landslides and earthquakes, oil spillage and forest fires. KSA is utilizing satellite data to provide critical information for early warning systems, disaster preparedness, response and recovery risk assessment and mitigation, and resilience.
-![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst3.jpg)
+
+<img
+  src="https://midst.ksa.go.ke/media/images/spatial_plannin_c4dee447-7633-4acc-9cb7-01c7.max-165x165.png"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
 ### IMPLEMENTATION OF PROJECT MIDST
 
@@ -53,11 +61,16 @@ Using this platform, KSA has embarked on pilot projects that supported the devel
 
 ~A sample of the generated forest products are as highlighted below;
 
-![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst3.jpghttps://ksa.go.ke/sites/default/files/inline-images/midst4.jpg)
+<img
+  src="https://ksa.go.ke/sites/default/files/inline-images/midst3.jpghttps://ksa.go.ke/sites/default/files/inline-images/midst4.jpg"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
 ~Monitoring of Vegetation cover for the whole Country
-
-![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst5.jpg)
+<img
+  src="https://ksa.go.ke/sites/default/files/inline-images/midst5.jpg"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
 ~Map of vegetation cover in Kenya between January to March 2019
 
@@ -67,7 +80,10 @@ Currently, KSA is working on delivering the second phase of project MIDST using 
 
 The agreed products are; land cover/land use map for the area of study, urban growth trend analysis, urban growth forecasting and urban heat islands.
 
-![alt text](https://ksa.go.ke/sites/default/files/inline-images/midst6.png)
+<img
+  src="https://ksa.go.ke/sites/default/files/inline-images/midst6.png"
+  alt="Alt text"
+  style="display: inline-block; margin: 0 auto; max-width: 80%"/>
 
 ## Engagement with potential partners and stakeholders
 
